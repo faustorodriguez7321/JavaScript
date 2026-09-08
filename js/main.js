@@ -1,19 +1,55 @@
-//comentario en linea
-
-
-/*comentario en bloque
-*/
-for (let i = 0; i < 2; i++) {
-    let nombre = prompt("Ingrese su nombre");
-    let apellido = prompt("Ingrese su apellido");
-    const anionaci = parseInt(prompt("Ingrese su año de nacimiento"));
-    let edad = 2026 - anionaci;
-    
-    alert(nombre + " " + apellido + " " + edad);
-    if (edad >= 18) {
-        console.log("usted es mayor de edad puede realizar la compra " + edad)
-    }
-    else {
-        console.log("usted es menor de edad no puede realizar la compra " + edad)
+function pelicula(peli){
+    switch(peli){
+        case "1": return "Avengers";
+        break;
+        
+        case "2": return "La odisea";
+        break;
+        
+        case "3": return "Troya";
+        break;
+        
+        case "4": return "Cars";
+        break;
+        
+        default: break;
     }
 }
+
+function calculotot(cantentradas){
+    let total=cantentradas*9000;
+    return total;
+}
+
+
+function verificardescuento(total,descuento){
+    if(descuento){
+        total=total*0.85;
+    }
+    return total;
+}
+const enpantalla=(peliculaelegida,cantentradas,descuento,total) =>{
+    console.log("Pelicula: "+ peliculaelegida);
+    console.log("Cantidad de entradas: "+ cantentradas);
+    console.log("¿Descuento aplicado?: " + descuento);
+    console.log("Total a pagar: "+ total);
+}
+
+let continuar = confirm("¿Desea realizar una compra?");
+while(continuar){
+    
+    let peli=prompt("¿De que pelicula quiere comprar entradas? (1=Avenger, 2=La odisea, 3=Troya, 4=Cars)")
+    
+    let cantentradas=parseInt(prompt("¿Cuantas entradas desea comprar?"));
+    
+    let descuento=confirm("¿Va a realizar el pago en transferencia/efectivo?");
+    
+    let peliculaelegida=pelicula(peli);
+    let total=calculotot(cantentradas);
+    total=verificardescuento(total,descuento);
+    
+    enpantalla(peliculaelegida, cantentradas, descuento, total);
+    
+    continuar = confirm("¿Desea realizar otra compra?");
+}
+
