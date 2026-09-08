@@ -33,6 +33,11 @@ const enpantalla=(peliculaelegida,cantentradas,descuento,total) =>{
     console.log("Cantidad de entradas: "+ cantentradas);
     console.log("¿Descuento aplicado?: " + descuento);
     console.log("Total a pagar: "+ total);
+    alert("Compra confirmada!\n"+
+        "Pelicula: "+ peliculaelegida + "\n"+
+        "Cantidad de entradas: "+ cantentradas + "\n"+
+        "Total a pagar: "+ total
+    )
 }
 
 let continuar = confirm("¿Desea realizar una compra?");
