@@ -1,60 +1,63 @@
-function pelicula(peli){
-    switch(peli){
-        case "1": return "Avengers";
-        break;
-        
-        case "2": return "La odisea";
-        break;
-        
-        case "3": return "Troya";
-        break;
-        
-        case "4": return "Cars";
-        break;
-        
-        default: break;
-    }
+
+const catalogoPerfumes = [
+  "Sauvage",
+  "Chanel N°5",
+  "Light Blue",
+  "Acqua di Giò",
+  "Black Opium"
+];
+
+function listarCatalogo(titulo) {
+  console.log("--- " + titulo + " ---");
+  for (const perfume of catalogoPerfumes) {
+    console.log("Perfume: " + perfume);
+  }
 }
 
-function calculotot(cantentradas){
-    let total=cantentradas*9000;
-    return total;
+function agregarPerfumeNuevo(nombre) {
+  catalogoPerfumes.push(nombre);
+  console.log("Se agregó al final del catálogo: " + nombre);
 }
 
-
-function verificardescuento(total,descuento){
-    if(descuento){
-        total=total*0.85;
-    }
-    return total;
-}
-const enpantalla=(peliculaelegida,cantentradas,descuento,total) =>{
-    console.log("Pelicula: "+ peliculaelegida);
-    console.log("Cantidad de entradas: "+ cantentradas);
-    console.log("¿Descuento aplicado?: " + descuento);
-    console.log("Total a pagar: "+ total);
-    alert("Compra confirmada!\n"+
-        "Pelicula: "+ peliculaelegida + "\n"+
-        "Cantidad de entradas: "+ cantentradas + "\n"+
-        "Total a pagar: "+ total
-    )
+function agregarPerfumeDestacado(nombre) {
+  catalogoPerfumes.unshift(nombre);
+  console.log("Se agregó al principio del catálogo: " + nombre);
 }
 
-let continuar = confirm("¿Desea realizar una compra?");
-while(continuar){
-    
-    let peli=prompt("¿De que pelicula quiere comprar entradas? (1=Avenger, 2=La odisea, 3=Troya, 4=Cars)")
-    
-    let cantentradas=parseInt(prompt("¿Cuantas entradas desea comprar?"));
-    
-    let descuento=confirm("¿Va a realizar el pago en transferencia/efectivo?");
-    
-    let peliculaelegida=pelicula(peli);
-    let total=calculotot(cantentradas);
-    total=verificardescuento(total,descuento);
-    
-    enpantalla(peliculaelegida, cantentradas, descuento, total);
-    
-    continuar = confirm("¿Desea realizar otra compra?");
+function retirarUltimoPerfume() {
+  const eliminado = catalogoPerfumes.pop();
+  console.log("Se ha eliminado el elemento: " + eliminado);
+  return eliminado;
 }
 
+function reemplazarPerfume(indice, nuevoNombre) {
+  if (indice >= 0 && indice < catalogoPerfumes.length) {
+    catalogoPerfumes.splice(indice, 1, nuevoNombre);
+    console.log("Se reemplazó el perfume en la posición " + indice + " por: " + nuevoNombre);
+  } else {
+    console.log("El índice " + indice + " no existe en el catálogo");
+  }
+}
+
+function pedirPerfume(nombre) {
+  if (catalogoPerfumes.includes(nombre)) {
+    const posicion = catalogoPerfumes.indexOf(nombre);
+    console.log("El cliente pidió: " + nombre + " (posición " + posicion + " del catálogo)");
+  } else {
+    alert("Lo sentimos, " + nombre + " no está disponible.");
+  }
+}
+
+agregarPerfumeNuevo("Invictus");
+agregarPerfumeDestacado("Good Girl");
+retirarUltimoPerfume();
+reemplazarPerfume(2, "Eros");
+listarCatalogo("Catálogo disponible");
+
+let pedido = prompt("¿Qué perfume querés? (escribí 'salir' para terminar)");
+while (pedido !== null && pedido.trim().toLowerCase() !== "salir") {
+  if (pedido.trim() !== "") {
+    pedirPerfume(pedido.trim());
+  }
+  pedido = prompt("¿Querés otro perfume? (escribí 'salir' para terminar)");
+}
