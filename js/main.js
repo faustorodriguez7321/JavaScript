@@ -1,95 +1,124 @@
-function clasificarEdad(edad) {
-   if (edad <= 17) {
-      return "niño/adolescente";
-   } else if (edad <= 59) {
-      return "adulto";
-   } else {
-      return "adulto mayor";
+class Perfume {
+   constructor(id, nombre, precio, stock) {
+      this.id = id;
+      this.nombre = nombre;
+      this.precio = precio;
+      this.stock = stock;
+   }
+
+   vender(cantidad) {
+      if (cantidad > 0 && cantidad <= this.stock) {
+         this.stock = this.stock - cantidad;
+         return true;
+      } else {
+         return false;
+      }
    }
 }
 
-function verificarJubilacion(edad, sexo) {
-   if (sexo == "femenino" && edad >= 60) {
-      return "puede jubilarse";
-   } else if (sexo == "masculino" && edad >= 65) {
-      return "puede jubilarse";
+const perfume1 = new Perfume(1, "Perfume floral", 45000, 10);
+const perfume2 = new Perfume(2, "Perfume cítrico", 38000, 8);
+const perfume3 = new Perfume(3, "Perfume amaderado", 52000, 5);
+
+const perfumes = [perfume1, perfume2, perfume3];
+
+function buscarPerfume(lista, id) {
+   for (const perfume of lista) {
+      if (perfume.id == id) {
+         return perfume;
+      }
+   }
+   return null;
+}
+
+function verificarStock(perfume, cantidad) {
+   if (perfume.stock == 0) {
+      return "sin stock";
+   } else if (cantidad > perfume.stock) {
+      return "stock insuficiente";
    } else {
-      return "todavía no puede jubilarse";
+      return "se puede vender";
    }
 }
 
-function calcularAños(edad, sexo) {
-   if (sexo == "femenino" && edad < 60) {
-      return 60 - edad;
-   } else if (sexo == "masculino" && edad < 65) {
-      return 65 - edad;
-   } else {
-      return 0;
-   }
+function calcularTotal(precio, cantidad) {
+   return precio * cantidad;
 }
 
-const mostrarResultado = (nombre, apellido, sexo, edad, categoria, jubilacion, años) => {
-   let mensaje = "Persona: " + nombre + " " + apellido + "\n" +
-                 "Sexo: " + sexo + "\n" +
-                 "Edad: " + edad + "\n" +
-                 "Categoría: " + categoria + "\n" +
-                 "Jubilación: " + jubilacion;
+const mostrarResultado = (nombre, precio, cantidad, estado, total, stockRestante) => {
+   let mensaje = "Perfume: " + nombre + "\n" +
+                 "Precio: $" + precio + "\n" +
+                 "Cantidad: " + cantidad + "\n" +
+                 "Estado: " + estado;
 
-   if (años > 0) {
-      mensaje = mensaje + "\n" + "Años que le faltan: " + años;
+   if (total > 0) {
+      mensaje = mensaje + "\n" + "Total a pagar: $" + total + "\n" + "Stock restante: " + stockRestante;
    }
    alert(mensaje);
 }
 
-const personasRegistradas = ["Laura Gómez", "Nicolás Pérez", "Marta Díaz", "Juan Gimenez", "Carla Ruiz"];
+const perfumesVendidos = ["Perfume floral", "Perfume cítrico"];
 
-function listarRegistrados(lista) {
-   console.log("Personas registradas:");
-   for (const persona of lista) {
-      console.log("Persona: " + persona);
+function listarVendidos(lista) {
+   console.log("Perfumes vendidos:");
+   for (const nombre of lista) {
+      console.log("Perfume: " + nombre);
+   }
+}
+
+function listarPerfumes(lista) {
+   console.log("Perfumes disponibles:");
+   for (const perfume of lista) {
+      console.log(perfume.id + " - " + perfume.nombre + " | Precio: $" + perfume.precio + " | Stock: " + perfume.stock);
    }
 }
 
 let continuar = "si";
 while (continuar == "si") {
 
-   let nombre = prompt("Ingrese su nombre:");
-   let apellido = prompt("Ingrese su apellido:");
-   let sexo = prompt("Ingrese su sexo (masculino o femenino):").toLowerCase();
-   let edad = prompt("Ingrese su edad:");
-
-   const categoria = clasificarEdad(edad);
-   const jubilacion = verificarJubilacion(edad, sexo);
-   const años = calcularAños(edad, sexo);
-
-   mostrarResultado(nombre, apellido, sexo, edad, categoria, jubilacion, años);
-
-   const nombreCompleto = nombre + " " + apellido;
-
-   if (jubilacion == "puede jubilarse") {
-      personasRegistradas.unshift(nombreCompleto);
-   } else {
-      personasRegistradas.push(nombreCompleto);
+   let menu = "Perfumes disponibles:\n";
+   for (const perfume of perfumes) {
+      menu = menu + perfume.id + " - " + perfume.nombre + " ($" + perfume.precio + ", stock: " + perfume.stock + ")\n";
    }
 
-   continuar = prompt("¿Desea cargar a otra persona? (si o no)").toLowerCase();
+   const idElegido = prompt(menu + "Ingrese el número del perfume:");
+   const perfumeElegido = buscarPerfume(perfumes, idElegido);
+
+   if (perfumeElegido) {
+      const cantidad = Number(prompt("Ingrese la cantidad:"));
+
+      const estado = verificarStock(perfumeElegido, cantidad);
+      let total = 0;
+
+      if (estado == "se puede vender" && perfumeElegido.vender(cantidad)) {
+         total = calcularTotal(perfumeElegido.precio, cantidad);
+         perfumesVendidos.push(perfumeElegido.nombre);
+      }
+
+      mostrarResultado(perfumeElegido.nombre, perfumeElegido.precio, cantidad, estado, total, perfumeElegido.stock);
+   } else {
+      alert("El perfume elegido no existe");
+   }
+
+   continuar = prompt("¿Desea realizar otra compra? (si o no)").toLowerCase();
 }
 
-listarRegistrados(personasRegistradas);
+listarVendidos(perfumesVendidos);
+listarPerfumes(perfumes);
 
-const corregir = prompt("¿Alguien escribió mal su nombre y quiere corregirlo? (si o no)").toLowerCase();
+const corregir = prompt("¿Se anotó mal algún perfume vendido y quiere corregirlo? (si o no)").toLowerCase();
 
 if (corregir == "si") {
 
    const nombreIncorrecto = prompt("Ingrese el nombre tal cual está registrado:");
 
-   if (personasRegistradas.includes(nombreIncorrecto)) {
-      const posicion = personasRegistradas.indexOf(nombreIncorrecto);
+   if (perfumesVendidos.includes(nombreIncorrecto)) {
+      const posicion = perfumesVendidos.indexOf(nombreIncorrecto);
       const nombreNuevo = prompt("Ingrese el nombre corregido:");
 
-      personasRegistradas.splice(posicion, 1, nombreNuevo);
+      perfumesVendidos.splice(posicion, 1, nombreNuevo);
       console.log("Nombre corregido. Registro actualizado:");
-      listarRegistrados(personasRegistradas);
+      listarVendidos(perfumesVendidos);
    } else {
       console.log(nombreIncorrecto + " no está registrado, no se puede corregir");
    }
