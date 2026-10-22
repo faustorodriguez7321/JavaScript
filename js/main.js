@@ -1,63 +1,98 @@
-
-const catalogoPerfumes = [
-  "Sauvage",
-  "Chanel N°5",
-  "Light Blue",
-  "Acqua di Giò",
-  "Black Opium"
-];
-
-function listarCatalogo(titulo) {
-  console.log("--- " + titulo + " ---");
-  for (const perfume of catalogoPerfumes) {
-    console.log("Perfume: " + perfume);
-  }
+function clasificarEdad(edad) {
+   if (edad <= 17) {
+      return "niño/adolescente";
+   } else if (edad <= 59) {
+      return "adulto";
+   } else {
+      return "adulto mayor";
+   }
 }
 
-function agregarPerfumeNuevo(nombre) {
-  catalogoPerfumes.push(nombre);
-  console.log("Se agregó al final del catálogo: " + nombre);
+function verificarJubilacion(edad, sexo) {
+   if (sexo == "femenino" && edad >= 60) {
+      return "puede jubilarse";
+   } else if (sexo == "masculino" && edad >= 65) {
+      return "puede jubilarse";
+   } else {
+      return "todavía no puede jubilarse";
+   }
 }
 
-function agregarPerfumeDestacado(nombre) {
-  catalogoPerfumes.unshift(nombre);
-  console.log("Se agregó al principio del catálogo: " + nombre);
+function calcularAños(edad, sexo) {
+   if (sexo == "femenino" && edad < 60) {
+      return 60 - edad;
+   } else if (sexo == "masculino" && edad < 65) {
+      return 65 - edad;
+   } else {
+      return 0;
+   }
 }
 
-function retirarUltimoPerfume() {
-  const eliminado = catalogoPerfumes.pop();
-  console.log("Se ha eliminado el elemento: " + eliminado);
-  return eliminado;
+const mostrarResultado = (nombre, apellido, sexo, edad, categoria, jubilacion, años) => {
+   let mensaje = "Persona: " + nombre + " " + apellido + "\n" +
+                 "Sexo: " + sexo + "\n" +
+                 "Edad: " + edad + "\n" +
+                 "Categoría: " + categoria + "\n" +
+                 "Jubilación: " + jubilacion;
+
+   if (años > 0) {
+      mensaje = mensaje + "\n" + "Años que le faltan: " + años;
+   }
+   alert(mensaje);
 }
 
-function reemplazarPerfume(indice, nuevoNombre) {
-  if (indice >= 0 && indice < catalogoPerfumes.length) {
-    catalogoPerfumes.splice(indice, 1, nuevoNombre);
-    console.log("Se reemplazó el perfume en la posición " + indice + " por: " + nuevoNombre);
-  } else {
-    console.log("El índice " + indice + " no existe en el catálogo");
-  }
+const personasRegistradas = ["Laura Gómez", "Nicolás Pérez", "Marta Díaz", "Juan Gimenez", "Carla Ruiz"];
+
+function listarRegistrados(lista) {
+   console.log("Personas registradas:");
+   for (const persona of lista) {
+      console.log("Persona: " + persona);
+   }
 }
 
-function pedirPerfume(nombre) {
-  if (catalogoPerfumes.includes(nombre)) {
-    const posicion = catalogoPerfumes.indexOf(nombre);
-    console.log("El cliente pidió: " + nombre + " (posición " + posicion + " del catálogo)");
-  } else {
-    alert("Lo sentimos, " + nombre + " no está disponible.");
-  }
+let continuar = "si";
+while (continuar == "si") {
+
+   let nombre = prompt("Ingrese su nombre:");
+   let apellido = prompt("Ingrese su apellido:");
+   let sexo = prompt("Ingrese su sexo (masculino o femenino):").toLowerCase();
+   let edad = prompt("Ingrese su edad:");
+
+   const categoria = clasificarEdad(edad);
+   const jubilacion = verificarJubilacion(edad, sexo);
+   const años = calcularAños(edad, sexo);
+
+   mostrarResultado(nombre, apellido, sexo, edad, categoria, jubilacion, años);
+
+   const nombreCompleto = nombre + " " + apellido;
+
+   if (jubilacion == "puede jubilarse") {
+      personasRegistradas.unshift(nombreCompleto);
+   } else {
+      personasRegistradas.push(nombreCompleto);
+   }
+
+   continuar = prompt("¿Desea cargar a otra persona? (si o no)").toLowerCase();
 }
 
-agregarPerfumeNuevo("Invictus");
-agregarPerfumeDestacado("Good Girl");
-retirarUltimoPerfume();
-reemplazarPerfume(2, "Eros");
-listarCatalogo("Catálogo disponible");
+listarRegistrados(personasRegistradas);
 
-let pedido = prompt("¿Qué perfume querés? (escribí 'salir' para terminar)");
-while (pedido !== null && pedido.trim().toLowerCase() !== "salir") {
-  if (pedido.trim() !== "") {
-    pedirPerfume(pedido.trim());
-  }
-  pedido = prompt("¿Querés otro perfume? (escribí 'salir' para terminar)");
+const corregir = prompt("¿Alguien escribió mal su nombre y quiere corregirlo? (si o no)").toLowerCase();
+
+if (corregir == "si") {
+
+   const nombreIncorrecto = prompt("Ingrese el nombre tal cual está registrado:");
+
+   if (personasRegistradas.includes(nombreIncorrecto)) {
+      const posicion = personasRegistradas.indexOf(nombreIncorrecto);
+      const nombreNuevo = prompt("Ingrese el nombre corregido:");
+
+      personasRegistradas.splice(posicion, 1, nombreNuevo);
+      console.log("Nombre corregido. Registro actualizado:");
+      listarRegistrados(personasRegistradas);
+   } else {
+      console.log(nombreIncorrecto + " no está registrado, no se puede corregir");
+   }
+} else {
+   console.log("No se realizaron correcciones");
 }
